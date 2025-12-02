@@ -8,27 +8,13 @@ import toga # widget toolkit
 from toga.style.pack import COLUMN, ROW # style related utility constants
 
 def greeting(name):
-   if name:
-       return f"Hello, {name}"
-   else:
-       return "Hello, stranger"
+    if name:
+        return f"Hello, {name}"
+    else:
+        return "Hello, stranger"
 
 
 class HelloWorld(toga.App):
-    async def say_hello(self, widget):
-        fake = faker.Faker()
-        async with httpx.AsyncClient() as client:
-            response = await client.get("https://jsonplaceholder.typicode.com/posts/42")
-
-        payload = response.json()
-
-        await self.main_window.dialog(
-            toga.InfoDialog(
-                greeting(self.name_input.value),
-                f"A message from {fake.name()}: {payload['body']}",
-            )
-        )
-
     def startup(self):
         main_box = toga.Box(direction=COLUMN) # it is a box that will consume all the available width, and will expand its height as content is added, but it will try to be as short as possible
 
@@ -54,6 +40,20 @@ class HelloWorld(toga.App):
         self.main_window = toga.MainWindow(title=self.formal_name)
         self.main_window.content = main_box
         self.main_window.show()
+
+    async def say_hello(self, widget):
+        fake = faker.Faker()
+        async with httpx.AsyncClient() as client:
+            response = await client.get("https://jsonplaceholder.typicode.com/posts/42")
+
+        payload = response.json()
+
+        await self.main_window.dialog(
+            toga.InfoDialog(
+                greeting(self.name_input.value),
+                f"A message from {fake.name()}: {payload['body']}",
+            )
+        )
 
 
 def main():
